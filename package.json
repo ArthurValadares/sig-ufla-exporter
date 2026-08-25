@@ -1,0 +1,43 @@
+{
+  "name": "sig-ufla-exporter",
+  "version": "1.0.0",
+  "description": "Extensão de navegador que extrai o horário de aulas do SIG UFLA e gera um arquivo .ics para importação no Google Calendar.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "clean": "rimraf dist build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"src/**/*.ts\" --max-warnings=0",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.{ts,css,json}\"",
+    "build:chrome": "webpack --config webpack.config.cjs --env target=chrome",
+    "build:firefox": "webpack --config webpack.config.cjs --env target=firefox",
+    "build": "pnpm run build:chrome && pnpm run build:firefox",
+    "package:chrome": "pnpm run build:chrome && node scripts/package.cjs chrome",
+    "package:firefox": "pnpm run build:firefox && node scripts/package.cjs firefox",
+    "package": "pnpm run package:chrome && pnpm run package:firefox"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.270",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^7.1.2",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "mini-css-extract-plugin": "^2.9.1",
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
+    "archiver": "^7.0.1",
+    "@types/archiver": "^6.0.2",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.4",
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "packageManager": "pnpm@9.7.0",
+  "engines": {
+    "node": ">=18"
+  }
+}
