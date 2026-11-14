@@ -1,0 +1,29 @@
+name: PR policy
+
+on:
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  source:
+    name: PR source is dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate source branch
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          echo "Origem do PR: $HEAD_REF"
+          case "$HEAD_REF" in
+            dev|release-please--*)
+              echo "OK: origem permitida."
+              ;;
+            *)
+              echo "::error::PRs para master devem vir da branch dev (ou de uma branch release-please--*). Origem atual: $HEAD_REF"
+              exit 1
+              ;;
+          esac
