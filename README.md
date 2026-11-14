@@ -208,7 +208,7 @@ feature/* ──PR──> dev ──PR──> master ──> release-please ─�
 
 ## Releases
 
-O versionamento é semântico (`v0.1.0`, `v0.1.1`, `v0.2.0`, ...) e automatizado
+O versionamento é semântico (`0.1.0`, `0.1.1`, `0.2.0`, ...) e automatizado
 pelo [release-please](https://github.com/googleapis/release-please) a partir das
 mensagens de commit no padrão
 [Conventional Commits](https://www.conventionalcommits.org):
@@ -223,13 +223,18 @@ Fluxo:
 2. Um PR de `dev` para `master` roda `typecheck`, `lint` e o empacotamento; após
    o merge, o release-please abre/atualiza um PR de release com o `CHANGELOG.md`
    e o bump de versão (em `package.json` e `manifests/manifest.base.json`).
-3. Ao mergear esse PR de release, o release-please cria a tag (`vX.Y.Z`) e a
-   release no GitHub.
+3. Ao mergear esse PR de release, o release-please cria a tag
+   (`sig-ufla-exporter-vX.Y.Z`) e a release no GitHub.
 4. O workflow `.github/workflows/release.yml` então builda e anexa à release os
    pacotes `sig-ufla-exporter-chrome.zip` e `sig-ufla-exporter-firefox.zip`.
 
 O workflow também roda `typecheck`, `lint` e o empacotamento em todo pull request
 para garantir que os dois alvos continuam compilando.
+
+> **Manutenção:** o job do release-please usa o secret
+> `RELEASE_PLEASE_TOKEN` (fine-grained PAT com `Contents`, `Issues` e
+> `Pull requests` em read/write). Sem ele, o PR de release é criado pelo
+> `GITHUB_TOKEN`, não dispara o CI e fica bloqueado pela proteção da `master`.
 
 ## Decisões de design
 
