@@ -16,6 +16,7 @@ qualquer outro app de calendário compatível com iCalendar).
 - [Estrutura de pastas](#estrutura-de-pastas)
 - [Como funciona a extração](#como-funciona-a-extração)
 - [Qualidade de código](#qualidade-de-código)
+- [Releases](#releases)
 - [Decisões de design](#decisões-de-design)
 
 ## Arquitetura
@@ -169,6 +170,49 @@ webpack.config.cjs          # Build parametrizado por --env target=chrome|firefo
   índice de array sempre tratado como possivelmente `undefined`.
 
 Rode `pnpm run typecheck && pnpm run lint` antes de qualquer release.
+
+### Hooks de pré-commit
+
+O projeto usa o [prek](https://prek.j178.dev) (compatível com o `pre-commit`
+upstream) para rodar verificações antes de cada commit. Instale os shims uma
+única vez com:
+
+```bash
+prek install
+```
+
+A partir daí o `prek` roda automaticamente nos estágios `pre-commit` e
+`commit-msg`: limpeza de whitespace/EOF, validação de YAML/JSON, detecção de
+segredos (gitleaks), Prettier, ESLint, `tsc --noEmit` e validação da mensagem de
+commit (Conventional Commits via commitlint). Para rodar tudo manualmente:
+
+```bash
+prek run --all-files
+```
+
+## Releases
+
+O versionamento é semântico (`v0.1.0`, `v0.1.1`, `v0.2.0`, ...) e automatizado
+pelo [release-please](https://github.com/googleapis/release-please) a partir das
+mensagens de commit no padrão
+[Conventional Commits](https://www.conventionalcommits.org):
+
+- `fix:` → patch
+- `feat:` → minor
+- `feat!:` / `BREAKING CHANGE:` → major (minor enquanto a versão for `0.x`)
+
+Fluxo:
+
+1. Cada push na branch `master` faz o release-please abrir/atualizar um PR de
+   release com o `CHANGELOG.md` e o bump de versão (em `package.json` e
+   `manifests/manifest.base.json`).
+2. Ao mergear esse PR, o release-please cria a tag (`vX.Y.Z`) e a release no
+   GitHub.
+3. O workflow `.github/workflows/release.yml` então builda e anexa à release os
+   pacotes `sig-ufla-exporter-chrome.zip` e `sig-ufla-exporter-firefox.zip`.
+
+O workflow também roda `typecheck`, `lint` e o empacotamento em todo pull request
+para garantir que os dois alvos continuam compilando.
 
 ## Decisões de design
 
