@@ -3,12 +3,20 @@
   "name": "SIG UFLA - Exportador de Horário",
   "version": "0.1.0",
   "description": "Extrai seu horário de aulas do SIG UFLA e gera um arquivo .ics para importar no Google Calendar, repetindo semanalmente durante o período letivo informado.",
-  "host_permissions": ["*://sig.ufla.br/*"],
+  "host_permissions": [
+    "*://sig.ufla.br/*"
+  ],
   "content_scripts": [
     {
-      "matches": ["*://sig.ufla.br/index.php*"],
-      "js": ["content.js"],
-      "css": ["content.css"],
+      "matches": [
+        "*://sig.ufla.br/index.php*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
       "run_at": "document_idle"
     }
   ]
