@@ -1,6 +1,6 @@
 {
   "name": "sig-ufla-exporter",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Extensão de navegador que extrai o horário de aulas do SIG UFLA e gera um arquivo .ics para importação no Google Calendar.",
   "private": true,
   "type": "module",
