@@ -16,6 +16,7 @@ qualquer outro app de calendário compatível com iCalendar).
 - [Estrutura de pastas](#estrutura-de-pastas)
 - [Como funciona a extração](#como-funciona-a-extração)
 - [Qualidade de código](#qualidade-de-código)
+- [Fluxo de branches](#fluxo-de-branches)
 - [Releases](#releases)
 - [Decisões de design](#decisões-de-design)
 
@@ -190,6 +191,21 @@ commit (Conventional Commits via commitlint). Para rodar tudo manualmente:
 prek run --all-files
 ```
 
+## Fluxo de branches
+
+- `master` é a branch de release e fica protegida: não aceita push direto,
+  exige PR, exige os checks `Build & package` e `PR source is dev`, exige a
+  branch atualizada com a `master` e proíbe force push/deleção.
+- `dev` é a branch de integração. Features, fixes, docs e mudanças de CI
+  entram nela primeiro.
+- Releases são disparados por merges de PRs da `dev` na `master`. O PR aberto
+  pelo próprio release-please (`release-please--*`) é a única exceção à regra
+  de origem.
+
+```text
+feature/* ──PR──> dev ──PR──> master ──> release-please ──merge──> tag + release
+```
+
 ## Releases
 
 O versionamento é semântico (`v0.1.0`, `v0.1.1`, `v0.2.0`, ...) e automatizado
@@ -203,12 +219,13 @@ mensagens de commit no padrão
 
 Fluxo:
 
-1. Cada push na branch `master` faz o release-please abrir/atualizar um PR de
-   release com o `CHANGELOG.md` e o bump de versão (em `package.json` e
-   `manifests/manifest.base.json`).
-2. Ao mergear esse PR, o release-please cria a tag (`vX.Y.Z`) e a release no
-   GitHub.
-3. O workflow `.github/workflows/release.yml` então builda e anexa à release os
+1. O trabalho é integrado na branch `dev`.
+2. Um PR de `dev` para `master` roda `typecheck`, `lint` e o empacotamento; após
+   o merge, o release-please abre/atualiza um PR de release com o `CHANGELOG.md`
+   e o bump de versão (em `package.json` e `manifests/manifest.base.json`).
+3. Ao mergear esse PR de release, o release-please cria a tag (`vX.Y.Z`) e a
+   release no GitHub.
+4. O workflow `.github/workflows/release.yml` então builda e anexa à release os
    pacotes `sig-ufla-exporter-chrome.zip` e `sig-ufla-exporter-firefox.zip`.
 
 O workflow também roda `typecheck`, `lint` e o empacotamento em todo pull request
