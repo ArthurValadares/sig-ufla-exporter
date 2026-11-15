@@ -16,14 +16,19 @@ jobs:
       - name: Validate source branch
         env:
           HEAD_REF: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
         run: |
-          echo "Origem do PR: $HEAD_REF"
+          echo "Origem do PR: $HEAD_REPO:$HEAD_REF"
+          if [ "$HEAD_REPO" != "$GITHUB_REPOSITORY" ]; then
+            echo "::error::PRs para master devem vir do repositório principal, não de um fork."
+            exit 1
+          fi
           case "$HEAD_REF" in
-            dev|release-please--*)
+            dev|release-please--branches--master--*)
               echo "OK: origem permitida."
               ;;
             *)
-              echo "::error::PRs para master devem vir da branch dev (ou de uma branch release-please--*). Origem atual: $HEAD_REF"
+              echo "::error::PRs para master devem vir da branch dev (ou de uma branch release-please--branches--master--*). Origem atual: $HEAD_REF"
               exit 1
               ;;
           esac

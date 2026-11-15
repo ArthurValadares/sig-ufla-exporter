@@ -199,8 +199,8 @@ prek run --all-files
 - `dev` é a branch de integração. Features, fixes, docs e mudanças de CI
   entram nela primeiro.
 - Releases são disparados por merges de PRs da `dev` na `master`. O PR aberto
-  pelo próprio release-please (`release-please--*`) é a única exceção à regra
-  de origem.
+  pelo próprio release-please (`release-please--branches--master--*`) é a única
+  exceção à regra de origem; PRs de forks também são rejeitados.
 
 ```text
 feature/* ──PR──> dev ──PR──> master ──> release-please ──merge──> tag + release
